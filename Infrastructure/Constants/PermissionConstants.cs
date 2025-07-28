@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Constants
 {
-   public record SchoolPermission(string Feature, string Action,string Description,string Group, bool IsBasic=false, bool IsRoot=false)
+   public record SchoolPermission(string Feature, string Action,string Description,string Group="", bool IsBasic=false, bool IsRoot=false)
     {
         public string Name => NameFor(Action,Feature);
         public static string NameFor(string feature, string action)=> $"Permission.{feature}.{action}";
