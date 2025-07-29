@@ -1,7 +1,11 @@
 ﻿using Finbuckle.MultiTenant;
 using Infrastructure.Contexts;
+using Infrastructure.Identity.Auth;
+using Infrastructure.Identity.Models;
 using Infrastructure.Tenancy;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +18,6 @@ namespace Infrastructure
         {
             // Add your infrastructure services here
             // For example, database context, repositories, etc.
-
             // Example:
             return services.AddDbContext<TenantDbContext>(options =>
                   options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")))
@@ -23,8 +26,39 @@ namespace Infrastructure
                  .WithClaimStrategy(TenancyConstants.TenantIdName)
                  .WithEFCoreStore<TenantDbContext, ABCSchoolTenantInfo>().Services
                  .AddDbContext<ApplicationDbContext>(options =>
-                     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")))
+                 
+                 .AddTransient<ITenantDbSeeder, TenantDbSeeder>()
+                 .AddTransient<ApplicationDbSeeder>()
+                 .AddIdentityService();
 
+        }
+
+        public static async Task AddDatabaseInitializerAsync(this IServiceProvider serviceProvider,CancellationToken ct=default)
+        {
+            using var scope = serviceProvider.CreateScope();
+            await scope.ServiceProvider.GetRequiredService<ITenantDbSeeder>().InitializeDatabaseAsync(ct);
+        }
+
+        private static IServiceCollection AddIdentityService(this IServiceCollection services)
+        {
+            return services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.Password.RequiredLength = 8;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders().Services;
+        }
+
+        private static IServiceCollection AddPermission(this IServiceCollection services)
+        {
+            return services
+                .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>()
+                .AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
         }
 
         public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
