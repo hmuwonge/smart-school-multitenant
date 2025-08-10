@@ -9,14 +9,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0f68714-927a-49f7-8fad-68f9ec767a1b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/WebApi/Controllers/WeatherForecastController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebApi/WeatherForecast.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Application/Features/Identity/Tokens/Queries/GetRefreshTokenQuery.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Application/Features/Identity/Tokens/Queries/GetTokenQuery.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Application/StartUp.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/WebApi/Controllers/BaseApiController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/WebApi/Controllers/TokenController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ABSchool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ABSchool/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/OpenApi/SwaggerGlobalAuthProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/OpenApi/SwaggerGlobalAuthProcessor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/OpenApi/SwaggerHeaderAttributeProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/OpenApi/SwaggerHeaderAttributeProcessor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/OpenApi/TenantHeaderAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/OpenApi/TenantHeaderAttribute.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApi/WebApi.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/WebApi/WebApi.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Application.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Application.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/Constants/PermissionConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/Constants/PermissionConstants.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/Constants/SchoolActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/Constants/SchoolActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infrastructure/Constants/SchoolFeature.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/Constants/SchoolFeature.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApi/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/WebApi/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +76,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "fix-swagger-api-doc",
+    "git-widget-placeholder": "login",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",

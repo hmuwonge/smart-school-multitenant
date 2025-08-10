@@ -8,4 +8,5 @@ public static class SchoolFeature
     public const string UserRoles = nameof(UserRoles);
     public const string RoleClaims = nameof(RoleClaims);
     public const string Schools = nameof(Schools);
+    public const string Tokens = nameof(Tokens);
 }
