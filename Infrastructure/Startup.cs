@@ -129,10 +129,14 @@ namespace Infrastructure
                             }
                             else
                             {
-                                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                                context.Response.ContentType = "application/json";
-                                var result =   JsonConvert.SerializeObject(ResponseWrapper.Fail("An unhandled error has occured."));
-                                return context.Response.WriteAsync(result);
+                                if (!context.Response.HasStarted)
+                                {
+                                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                                    context.Response.ContentType = "application/json";
+                                    var result = JsonConvert.SerializeObject(ResponseWrapper.Fail("An unhandled error has occured."));
+                                    return context.Response.WriteAsync(result);
+                                }
+                                return Task.CompletedTask;
                             }
                         },
                         OnChallenge = context =>

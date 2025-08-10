@@ -9,7 +9,6 @@ public class ShouldHavePermissionAttribute:AuthorizeAttribute
     {
         Policy = SchoolPermission.NameFor(action, feature);
     }
-    
 }
 
 

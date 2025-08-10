@@ -45,6 +45,8 @@ namespace Infrastructure.Constants
             new SchoolPermission(SchoolAction.Create,SchoolFeature.Schools,"Create Schools","Academics"),
             new SchoolPermission(SchoolAction.Update,SchoolFeature.Schools,"Update Schools","Academics"),
             new SchoolPermission(SchoolAction.Delete,SchoolFeature.Schools,"Delete Schools","Academics"),
+          
+            new SchoolPermission(SchoolAction.RefreshToken,SchoolFeature.Tokens,"Generate Refresh Token","SystemAccess",IsBasic:true),
         ];
 
         public static IReadOnlyList<SchoolPermission> All { get; } =

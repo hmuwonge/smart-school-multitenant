@@ -1,3 +1,4 @@
+using Application;
 using Infrastructure;
 
 namespace WebApi
@@ -14,6 +15,7 @@ namespace WebApi
             // jwt secrete configs
            var jwtConfig = builder.Services.GetJwtSettings(builder.Configuration);
             builder.Services.AddJwtAuthentication(jwtConfig);
+            builder.Services.AddApplicationServices();
             var app = builder.Build(); 
 
             // Database Seeder
@@ -21,6 +23,9 @@ namespace WebApi
 
             app.UseHttpsRedirection();
             app.UseInfrastructure(); 
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
             app.MapControllers();
             app.Run();
         }
