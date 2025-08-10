@@ -139,15 +139,12 @@ namespace Infrastructure
                         {
                             // Skip default logic and handle the response manually
                             context.HandleResponse();
-                            if (!context.Response.HasStarted)
-                            {
-                                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                                context.Response.ContentType = "application/json";
-                                var result = JsonConvert.SerializeObject(ResponseWrapper.Fail("You are not authorized."));
-                                // Debug.WriteLine(result);
-                                return context.Response.WriteAsync(result);  
-                            }
-                            return Task.CompletedTask;
+                            if (context.Response.HasStarted) return Task.CompletedTask;
+                            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                            context.Response.ContentType = "application/json";
+                            var result = JsonConvert.SerializeObject(ResponseWrapper.Fail("You are not authorized."));
+                            // Debug.WriteLine(result);
+                            return context.Response.WriteAsync(result);
                         },
                         OnForbidden = context =>
                         {
