@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -41,27 +42,27 @@ public class TokenService : ITokenService
         #region Validations
         if (!_tenantContextAccessor.MultiTenantContext.TenantInfo.IsActive)
         {
-            throw new UnauthorizedException(["Tenant subscription is not active. Contact Admin"]);
+            throw new UnauthorizedException(HttpStatusCode.Unauthorized, ["Tenant subscription is not active. Contact Admin"]);
         }
 
-        var userInDb = await _userManager.FindByNameAsync(request.Username) ?? throw new UnauthorizedException([
+        var userInDb = await _userManager.FindByNameAsync(request.Username) ?? throw new UnauthorizedException(HttpStatusCode.Unauthorized, [
         "Authentication not successful"]);
 
         if (!await _userManager.CheckPasswordAsync(userInDb, request.Password))
         {
-            throw new UnauthorizedException(["Incorrect Username or Password"]);
+            throw new UnauthorizedException(HttpStatusCode.Unauthorized, ["Incorrect Username or Password"]);
         }
 
         if (!userInDb.IsActive)
         {
-            throw new UnauthorizedException(["User Not Active.Contact Admin"]);
+            throw new UnauthorizedException(HttpStatusCode.Unauthorized, ["User Not Active.Contact Admin"]);
         }
 
         if (_tenantContextAccessor.MultiTenantContext.TenantInfo.Id is not TenancyConstants.Root.Id)
         {
             if (_tenantContextAccessor.MultiTenantContext.TenantInfo.ValidUpTo < DateTime.UtcNow)
             {
-                throw new UnauthorizedException(["Tenant Subscription has expired. Contact Admin"]);
+                throw new UnauthorizedException(HttpStatusCode.Unauthorized, ["Tenant Subscription has expired. Contact Admin"]);
             }
         }
         #endregion
@@ -88,7 +89,7 @@ public class TokenService : ITokenService
         if (securityToken is not JwtSecurityToken jwtSecurityToken 
             || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.CurrentCultureIgnoreCase))
         {
-            throw new UnauthorizedException(["Invalid token provided. Failed to generate new token"]);
+            throw new UnauthorizedException(HttpStatusCode.Unauthorized, ["Invalid token provided. Failed to generate new token"]);
         }
 
         return principal;
@@ -173,11 +174,11 @@ public class TokenService : ITokenService
         var userEmail = userPrincipal.GetEmail();
 
         var userInDb = await _userManager.FindByEmailAsync(userEmail) ??
-                       throw new UnauthorizedException(["Authorization failed"]);
+                       throw new UnauthorizedException(HttpStatusCode.Unauthorized, ["Authorization failed"]);
 
         if (userInDb.RefreshToken != request.CurrentRefreshToken || userInDb.RefreshTokenExpiryTime < DateTime.UtcNow)
         {
-            throw new UnauthorizedException(["Invalid token."]);
+            throw new UnauthorizedException(HttpStatusCode.Unauthorized, ["Invalid token."]);
         }
 
         return await GenerateTokenAndUpdateUserAsync(userInDb);

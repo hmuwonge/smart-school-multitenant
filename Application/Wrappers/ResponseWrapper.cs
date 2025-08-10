@@ -187,17 +187,17 @@ public class ResponseWrapper<T> : ResponseWrapper, IResponseWrapper<T>
         return Task.FromResult(Success(message));
     }
     
-    public new static Task<ResponseWrapper<T>> SuccessAsync(T data)
+    public static Task<ResponseWrapper<T>> SuccessAsync(T data)
     {
         return Task.FromResult(Success(data));
     }
     
-    public new static Task<ResponseWrapper<T>> SuccessAsync(T data, string message)
+    public static Task<ResponseWrapper<T>> SuccessAsync(T data, string message)
     {
         return Task.FromResult(Success(data,message));
     }
     
-    public new static Task<ResponseWrapper<T>> SuccessAsync(T data, List<string> message)
+    public static Task<ResponseWrapper<T>> SuccessAsync(T data, List<string> message)
     {
         return Task.FromResult(Success(data, message));
     }

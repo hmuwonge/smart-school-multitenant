@@ -4,14 +4,14 @@ namespace Application.Exceptions;
 
 public class NotFoundException:Exception
 {
-    public List<string> ErrorMessage { get; set; }
+    public List<string> ErrorMessages { get; set; }
     public HttpStatusCode StatusCode { get; set; }
 
     public NotFoundException(HttpStatusCode statusCode = HttpStatusCode.NotFound,
-        List<string> errorMessage = default)
+        List<string> errorMessages = default)
     {
         StatusCode = statusCode;
-        ErrorMessage = errorMessage;
+        ErrorMessages = errorMessages;
     }
     
 }
