@@ -37,5 +37,5 @@ public class SwaggerHeaderAttributeProcessor: IOperationProcessor
         }
 
         return true;
-    }
+    } 
 }

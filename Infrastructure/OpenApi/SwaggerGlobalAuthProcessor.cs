@@ -38,7 +38,7 @@ public class SwaggerGlobalAuthProcessor(string schema):IOperationProcessor
                 return true;
             }
 
-            if (context.OperationDescription.Operation.Security.Count ==0)
+            if (context.OperationDescription.Operation.Security?.Count == 0 || context.OperationDescription.Operation.Security == null)
             {
                 (context.OperationDescription.Operation.Security ??= [])
                     .Add(new OpenApiSecurityRequirement
@@ -64,7 +64,7 @@ public class SwaggerGlobalAuthProcessor(string schema):IOperationProcessor
         /// <param name="defaultValue"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T TryGetPropertyValue<T>( object obj, string propertyName, T defaultValue = default) =>
+        public static T TryGetPropertyValue<T>(object obj, string propertyName, T defaultValue = default) =>
             obj.GetType().GetRuntimeProperty(propertyName) is PropertyInfo propertyInfo
                 ? (T)propertyInfo.GetValue(obj)
                 : defaultValue;

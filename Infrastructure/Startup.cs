@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
@@ -36,8 +37,9 @@ namespace Infrastructure
             // Add your infrastructure services here
             // For example, database context, repositories, etc.
             // Example:
-            return services.AddDbContext<TenantDbContext>(options =>
-                  options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")))
+            return services
+                .AddDbContext<TenantDbContext>(options => options
+                    .UseSqlServer(configuration.GetConnectionString("DefaultConnection")))
                  .AddMultiTenant<ABCSchoolTenantInfo>()
                  .WithHeaderStrategy(TenancyConstants.TenantIdName)
                  .WithClaimStrategy(TenancyConstants.TenantIdName)
@@ -47,7 +49,9 @@ namespace Infrastructure
                  
                  .AddTransient<ITenantDbSeeder, TenantDbSeeder>()
                  .AddTransient<ApplicationDbSeeder>()
-                 .AddIdentityService();
+                 .AddIdentityService()
+                .AddPermissions()
+                .AddOpenApiDocumentation(configuration);
 
         }
 
@@ -72,7 +76,7 @@ namespace Infrastructure
             .AddScoped<ITokenService, TokenService>();
         }
 
-        private static IServiceCollection AddPermission(this IServiceCollection services)
+        private static IServiceCollection AddPermissions(this IServiceCollection services)
         {
             return services
                 .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>()
@@ -82,9 +86,9 @@ namespace Infrastructure
         public static JwtSettings GetJwtSettings(this IServiceCollection serviceCollection,
             IConfiguration configuration)
         {
-            var jwtSettingsconfig = configuration.GetSection(nameof(JwtSettings));
-            serviceCollection.Configure<JwtSettings>(jwtSettingsconfig);
-            return jwtSettingsconfig.Get<JwtSettings>();
+            var jwtSettingsConfig = configuration.GetSection(nameof(JwtSettings));
+            serviceCollection.Configure<JwtSettings>(jwtSettingsConfig);
+            return jwtSettingsConfig.Get<JwtSettings>()!;
         }
 
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection service, JwtSettings jwtSettings)
@@ -94,7 +98,7 @@ namespace Infrastructure
             service.AddAuthentication(auth =>
                 {
                     auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(bearer =>
                 {
@@ -103,7 +107,7 @@ namespace Infrastructure
                     bearer.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        ValidateIssuer = true,
+                        ValidateIssuer = false,
                         ValidateAudience = false,
                         ClockSkew = TimeSpan.Zero,
                         RoleClaimType = ClaimTypes.Role,
@@ -133,10 +137,17 @@ namespace Infrastructure
                         },
                         OnChallenge = context =>
                         {
-                            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                            context.Response.ContentType = "application/json";
-                            var result =   JsonConvert.SerializeObject(ResponseWrapper.Fail("You are not authorized."));
-                            return context.Response.WriteAsync(result);
+                            // Skip default logic and handle the response manually
+                            context.HandleResponse();
+                            if (!context.Response.HasStarted)
+                            {
+                                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                                context.Response.ContentType = "application/json";
+                                var result = JsonConvert.SerializeObject(ResponseWrapper.Fail("You are not authorized."));
+                                // Debug.WriteLine(result);
+                                return context.Response.WriteAsync(result);  
+                            }
+                            return Task.CompletedTask;
                         },
                         OnForbidden = context =>
                         {
@@ -202,7 +213,6 @@ namespace Infrastructure
                 document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor());
                 document.OperationProcessors.Add(new SwaggerGlobalAuthProcessor());
                 document.OperationProcessors.Add(new SwaggerHeaderAttributeProcessor());
-
             });
 
             return services;
@@ -212,14 +222,14 @@ namespace Infrastructure
             // Configure your middleware here
             // For example, authentication, logging, etc.
             // Example:
-            app.UseMultiTenant()
+            app.UseAuthentication()
                 .UseMultiTenant()
                 .UseAuthorization()
-                .UserOpenApiDocumentation();
+                .UseOpenApiDocumentation();
             return app;
         }
 
-        private static IApplicationBuilder UserOpenApiDocumentation(this IApplicationBuilder app)
+        private static IApplicationBuilder UseOpenApiDocumentation(this IApplicationBuilder app)
         {
             app.UseOpenApi();
             app.UseSwaggerUi(opt =>
