@@ -9,14 +9,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0f68714-927a-49f7-8fad-68f9ec767a1b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/WebApi/Controllers/WeatherForecastController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/WebApi/WeatherForecast.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ABSchool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ABSchool/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/OpenApi/SwaggerGlobalAuthProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/OpenApi/SwaggerGlobalAuthProcessor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/OpenApi/SwaggerHeaderAttributeProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/OpenApi/SwaggerHeaderAttributeProcessor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/OpenApi/TenantHeaderAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/OpenApi/TenantHeaderAttribute.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebApi/WebApi.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/WebApi/WebApi.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,24 +58,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.WebApi: https.executor": "Run",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "fix-swagger-api-doc",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.WebApi: https.executor&quot;: &quot;Run&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;login&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.WebApi: https">
     <configuration name="WebApi: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/WebApi/WebApi.csproj" />
@@ -138,6 +131,7 @@
       <workItem from="1754663859639" duration="3030000" />
       <workItem from="1754683882784" duration="6725000" />
       <workItem from="1754732799362" duration="10246000" />
+      <workItem from="1754793489493" duration="133000" />
     </task>
     <task id="LOCAL-00001" summary="update: added login validations">
       <option name="closed" value="true" />

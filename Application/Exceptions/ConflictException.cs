@@ -2,15 +2,14 @@ using System.Net;
 
 namespace Application.Exceptions;
 
-public class ConflictException
+public class ConflictException:Exception
 {
-    public List<string> ErrorMessage { get; set; }
+    public List<string> ErrorMessages { get; set; }
     public HttpStatusCode StatusCode { get; set; }
 
-    public ConflictException(HttpStatusCode statusCode = HttpStatusCode.Conflict,
-        List<string> errorMessage = default)
+    public ConflictException(List<string> errorMessages = default,HttpStatusCode statusCode = HttpStatusCode.Conflict)
     {
-        StatusCode = statusCode;
-        ErrorMessage = errorMessage;
+        ErrorMessages = errorMessages;
+        StatusCode = statusCode;        
     }
 }
