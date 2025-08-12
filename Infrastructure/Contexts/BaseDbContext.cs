@@ -21,7 +21,7 @@ namespace Infrastructure.Contexts
             IdentityUserToken<string>
             >
     {
-        private ABCSchoolTenantInfo TenantInfo { get; set; }
+        private new ABCSchoolTenantInfo TenantInfo { get; set; }
         protected BaseDbContext(
             IMultiTenantContextAccessor<ABCSchoolTenantInfo> tenantContextAccessor, DbContextOptions options) 
             : base(tenantContextAccessor,options)
@@ -32,11 +32,15 @@ namespace Infrastructure.Contexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
+            // Only override if tenant has a specific connection string
             if (!string.IsNullOrEmpty(TenantInfo?.ConnectionString))
             {
                 optionsBuilder.UseSqlServer(TenantInfo.ConnectionString, options =>
-                    options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName));
+                {
+                    options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
+                });
             }
+            // If no tenant-specific connection string, the base configuration from DI will be used
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

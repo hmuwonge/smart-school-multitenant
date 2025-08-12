@@ -1,10 +1,6 @@
-﻿using Application.Wrappers;
+using Application.Features.Tenancy;
+using Application.Wrappers;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.Tenancy.Queries
 {
@@ -16,6 +12,12 @@ namespace Application.Features.Tenancy.Queries
     public class GetTenantByIdQueryHandler : IRequestHandler<GetTenantByIdQuery, IResponseWrapper>
     {
         private readonly ITenantService _tenantService;
+        
+        public GetTenantByIdQueryHandler(ITenantService tenantService)
+        {
+            _tenantService = tenantService;
+        }
+        
         public async Task<IResponseWrapper> Handle(GetTenantByIdQuery request, CancellationToken cancellationToken)
         {
            var tenant = await _tenantService.GetTenantByIdAsync(request.TenantId);

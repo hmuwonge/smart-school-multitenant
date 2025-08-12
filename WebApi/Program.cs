@@ -24,7 +24,7 @@ namespace WebApi
             app.UseHttpsRedirection();
             app.UseInfrastructure(); 
 
-            app.UseMiddleware<ErrorHandlingMiddleware>();
+            // app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.MapControllers();
             app.Run();

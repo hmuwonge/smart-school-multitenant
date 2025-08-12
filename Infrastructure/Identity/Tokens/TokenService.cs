@@ -158,7 +158,7 @@ public class TokenService : ITokenService
         var claims = new List<Claim>
             {
         new(ClaimTypes.NameIdentifier,user.Id),
-        new(ClaimTypes.Email,user.Id),
+        new(ClaimTypes.Email,user.Email ?? String.Empty),
         new(ClaimTypes.Name,user.FirstName),
         new(ClaimTypes.Surname,user.LastName),
         new(ClaimConstants.Tenant,_tenantContextAccessor.MultiTenantContext.TenantInfo.Id),

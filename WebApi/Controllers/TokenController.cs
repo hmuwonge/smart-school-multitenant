@@ -47,4 +47,13 @@ public class TokenController:BaseApiController
 
         return BadRequest(response);
     }
+    
+    [HttpGet("debug-claims")]
+    [Authorize]
+    [OpenApiOperation("Debug endpoint to check current user claims.")]
+    public IActionResult GetCurrentUserClaims()
+    {
+        var claims = User.Claims.Select(c => new { Type = c.Type, Value = c.Value }).ToList();
+        return Ok(new { Claims = claims });
+    }
 }

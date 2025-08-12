@@ -9,7 +9,7 @@ public class PermissionPolicyProvider(IOptions<AuthorizationOptions> options): I
     public DefaultAuthorizationPolicyProvider FallbackPolicyProvider { get; }=
     new DefaultAuthorizationPolicyProvider(options);
     
-    public Task<AuthorizationPolicy> GetPolicyAsync(string policyName)
+    public Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
     {
         if (policyName.StartsWith(ClaimConstants.Permission, StringComparison.OrdinalIgnoreCase))
         {

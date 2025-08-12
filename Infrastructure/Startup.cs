@@ -50,11 +50,10 @@ namespace Infrastructure
                  
                  .AddTransient<ITenantDbSeeder, TenantDbSeeder>()
                  .AddTransient<ApplicationDbSeeder>()
-                .AddTransient<ITenantService , TenantService>()
+                .AddTransient<ITenantService,TenantService>()
                  .AddIdentityService()
                 .AddPermissions()
                 .AddOpenApiDocumentation(configuration);
-
         }
 
         public static async Task AddDatabaseInitializerAsync(this IServiceProvider serviceProvider,CancellationToken ct=default)

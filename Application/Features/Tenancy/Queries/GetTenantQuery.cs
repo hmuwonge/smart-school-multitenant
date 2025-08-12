@@ -1,4 +1,5 @@
-﻿using Application.Wrappers;
+using Application.Features.Tenancy;
+using Application.Wrappers;
 using MediatR;
 
 namespace Application.Features.Tenancy.Queries

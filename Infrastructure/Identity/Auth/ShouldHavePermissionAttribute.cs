@@ -7,9 +7,6 @@ public class ShouldHavePermissionAttribute:AuthorizeAttribute
 {
     public ShouldHavePermissionAttribute(string action, string feature)
     {
-        Policy = SchoolPermission.NameFor(action, feature);
+        Policy = SchoolPermission.NameFor(feature, action);
     }
 }
-
-
-// permission usage ShouldHavePermission(action: schoolAction.Read,feature:SchoolFeature.Schools
