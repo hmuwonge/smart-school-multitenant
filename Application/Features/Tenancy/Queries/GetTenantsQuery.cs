@@ -4,11 +4,11 @@ using MediatR;
 
 namespace Application.Features.Tenancy.Queries
 {
-    public class GetTenantQuery:IRequest<IResponseWrapper>
+    public class GetTenantsQuery:IRequest<IResponseWrapper>
     {
     }
 
-    public class GetTenantsQueryHandler : IRequestHandler<GetTenantQuery, IResponseWrapper>
+    public class GetTenantsQueryHandler : IRequestHandler<GetTenantsQuery, IResponseWrapper>
     {
       private readonly ITenantService _tenantService;
 
@@ -17,7 +17,7 @@ namespace Application.Features.Tenancy.Queries
             _tenantService = tenantService;
         }
 
-        public async Task<IResponseWrapper> Handle(GetTenantQuery request, CancellationToken cancellationToken)
+        public async Task<IResponseWrapper> Handle(GetTenantsQuery request, CancellationToken cancellationToken)
         {
             var tenants = await _tenantService.GetTenantsAsync();
             return await ResponseWrapper<List<TenantResponse>>.SuccessAsync(data: tenants);

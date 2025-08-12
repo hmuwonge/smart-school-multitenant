@@ -84,5 +84,18 @@ namespace WebApi.Controllers
             }
             return BadRequest(response);
         }
+        
+        [HttpGet("all")]
+        [ShouldHavePermission(action: SchoolAction.Read, feature: SchoolFeature.Tenants)]
+        public async Task<IActionResult> GetTenantsAsync()
+        {
+            var response = await Sender.Send(new GetTenantsQuery());
+            
+            if (response.IsSuccessful)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
     }
 }
