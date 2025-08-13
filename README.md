@@ -21,9 +21,9 @@ This project is a **Multi-Tenant School Management RESTful API** built using **A
 
 ```bash
 src/
-├── School.API                 # Entry point (controllers, middlewares, DI, config)
-├── School.Application        # Application layer (DTOs, CQRS, interfaces)
-├── School.Domain             # Domain layer (Entities, Aggregates, Value Objects, Interfaces)
+├── School.Core                 # Entry point (controllers, middlewares, DI, config)
+├── School.Infrastructure      # Application layer (DTOs, CQRS, interfaces)
+├── School.WebApi            # Domain layer (Entities, Aggregates, Value Objects, Interfaces)
 ├── School.Infrastructure     # Infrastructure layer (EF Core, Repositories, external services)
 ├── School.Persistence        # EF Core DbContext, migrations, seeders
 └── School.Tests              # Unit & Integration Tests
