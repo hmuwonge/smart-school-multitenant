@@ -7,7 +7,7 @@ namespace Application.Features.Schools.Commands;
 
 public class CreateSchoolCommand:IRequest<IResponseWrapper>
 {
-    public CreateSchoolCommand CreateSchool { get; set; }
+    public CreateSchoolRequest CreateSchool { get; set; }
 }
 
 public class CreateSchoolCommandHandler : IRequestHandler<CreateSchoolCommand, IResponseWrapper>

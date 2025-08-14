@@ -11,6 +11,12 @@ public class DeleteSchoolCommand:IRequest<IResponseWrapper>
 public class DeleteSchoolCommandHandler : IRequestHandler<DeleteSchoolCommand, IResponseWrapper>
 {
     private readonly ISchoolService _schoolService;
+
+    public DeleteSchoolCommandHandler(ISchoolService schoolService)
+    {
+        _schoolService = schoolService;
+    }
+
     public async Task<IResponseWrapper> Handle(DeleteSchoolCommand request, CancellationToken cancellationToken)
     {
         var schoolInDb = await _schoolService.GetByIdAsync(request.SchoolId);
