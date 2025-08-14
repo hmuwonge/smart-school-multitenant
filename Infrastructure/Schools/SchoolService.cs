@@ -41,7 +41,7 @@ public class SchoolService:ISchoolService
             .FirstOrDefaultAsync();
     }
 
-    public async Task<List<School>> GetAllAsync(School school)
+    public async Task<List<School>> GetAllAsync()
     {
         return await _context.Schools.ToListAsync();
     }
