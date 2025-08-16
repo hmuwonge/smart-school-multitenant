@@ -7,11 +7,12 @@ public class NotFoundException:Exception
     public List<string> ErrorMessages { get; set; }
     public HttpStatusCode StatusCode { get; set; }
 
-    public NotFoundException(HttpStatusCode statusCode = HttpStatusCode.NotFound,
-        List<string> errorMessages = default)
+    public NotFoundException(List<string> errorMessages = default,HttpStatusCode statusCode = HttpStatusCode.NotFound
+        )
     {
-        StatusCode = statusCode;
         ErrorMessages = errorMessages;
+        StatusCode = statusCode;
+        
     }
     
 }

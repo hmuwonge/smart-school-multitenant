@@ -17,4 +17,9 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Identity\Roles\Commands\" />
+    <Folder Include="Features\Identity\Roles\Queries\" />
+  </ItemGroup>
+
 </Project>
