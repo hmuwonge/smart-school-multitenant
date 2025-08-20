@@ -20,15 +20,15 @@ public class UserService: IUserService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
     private IMultiTenantContextAccessor<ABCSchoolTenantInfo> _tenantInfoContextAccessor;
-    private IUserService _userServiceImplementation;
 
-    public UserService(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IMultiTenantContextAccessor<ABCSchoolTenantInfo> tenantInfoContextAccessor, IUserService userServiceImplementation)
+    public UserService(RoleManager<ApplicationRole> roleManager,
+        UserManager<ApplicationUser> userManager, ApplicationDbContext context, 
+        IMultiTenantContextAccessor<ABCSchoolTenantInfo> tenantInfoContextAccessor)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _context = context;
         _tenantInfoContextAccessor = tenantInfoContextAccessor;
-        _userServiceImplementation = userServiceImplementation;
     }
 
     /// <summary>

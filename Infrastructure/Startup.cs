@@ -16,6 +16,7 @@ using Infrastructure.Constants;
 using Infrastructure.Contexts;
 using Infrastructure.Identity;
 using Infrastructure.Identity.Auth;
+using Infrastructure.Identity.Middleware;
 using Infrastructure.Identity.Models;
 using Infrastructure.Identity.Tokens;
 using Infrastructure.OpenApi;
@@ -82,7 +83,9 @@ namespace Infrastructure
             .AddDefaultTokenProviders().Services
             .AddScoped<ITokenService, TokenService>()
             .AddScoped<IUserService, UserService>()
-            .AddScoped<IRoleService, RoleService>();
+            .AddScoped<ICurrentUserService, CurrentUserService>()
+            .AddScoped<IRoleService, RoleService>()
+            .AddScoped<CurrentUserMiddleware>();
         }
 
         private static IServiceCollection AddPermissions(this IServiceCollection services)
@@ -233,6 +236,7 @@ namespace Infrastructure
             // For example, authentication, logging, etc.
             // Example:
             app.UseAuthentication()
+                .UseMiddleware<CurrentUserMiddleware>()
                 .UseMultiTenant()
                 .UseAuthorization()
                 .UseOpenApiDocumentation();

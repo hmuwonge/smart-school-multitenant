@@ -51,7 +51,7 @@ namespace WebApi
                         break;
                    default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        responseWrapper.Messages = ["Something went wrong. Contact Administration."];
+                        responseWrapper.Messages = [ex.Message];
                         break;
                 }
 

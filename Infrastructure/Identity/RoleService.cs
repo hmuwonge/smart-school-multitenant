@@ -26,13 +26,11 @@ public class RoleService:IRoleService
         RoleManager<ApplicationRole> roleManager, 
         UserManager<ApplicationUser> userManager, 
         ApplicationDbContext context,
-        IRoleService roleServiceImplementation,
         IMultiTenantContextAccessor<ABCSchoolTenantInfo> tenantInfoContextAccessor)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _context = context;
-        _roleServiceImplementation = roleServiceImplementation;
         _tenantInfoContextAccessor = tenantInfoContextAccessor;
     }
 
