@@ -1,9 +1,11 @@
 using Application.Exceptions;
 using Application.Features.Identity.Roles;
 using Application.Features.Identity.Roles.Contracts;
+using Finbuckle.MultiTenant.Abstractions;
 using Infrastructure.Constants;
 using Infrastructure.Contexts;
 using Infrastructure.Identity.Models;
+using Infrastructure.Tenancy;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,8 @@ public class RoleService:IRoleService
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
+    private IMultiTenantContextAccessor<ABCSchoolTenantInfo> _tenantInfoContextAccessor;
+    // private readonly TenantInfo
     
     private IRoleService _roleServiceImplementation;
 
@@ -22,12 +26,14 @@ public class RoleService:IRoleService
         RoleManager<ApplicationRole> roleManager, 
         UserManager<ApplicationUser> userManager, 
         ApplicationDbContext context,
-        IRoleService roleServiceImplementation)
+        IRoleService roleServiceImplementation,
+        IMultiTenantContextAccessor<ABCSchoolTenantInfo> tenantInfoContextAccessor)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _context = context;
         _roleServiceImplementation = roleServiceImplementation;
+        _tenantInfoContextAccessor = tenantInfoContextAccessor;
     }
 
     public async Task<string> CreateAsync(CreateRoleRequest request)
@@ -41,7 +47,7 @@ public class RoleService:IRoleService
         
         if (!result.Succeeded)
         {
-            throw new IdentityException(GetIdentityResultErrorDescriptions(result));
+            throw new IdentityException(IdentityHelper.GetIdentityResultErrorDescriptions(result));
         }
         // return await _roleServiceImplementation.CreateAsync(request);
         return newRole.Name;
@@ -49,7 +55,26 @@ public class RoleService:IRoleService
 
     public async Task<string> UpdateAsync(UpdateRoleRequest request)
     {
-        return await _roleServiceImplementation.UpdateAsync(request);
+        // return await _roleServiceImplementation.UpdateAsync(request);
+        var roleInDb = await _roleManager.FindByIdAsync(request.Id)
+                       ?? throw new NotFoundException(["Role does not exist"]);
+
+        if (RoleConstants.IsDefaultRole(roleInDb.Name))
+        {
+            throw new ConflictException([$"Changes not allowed on system role {roleInDb.Name} role."]);
+        }
+
+        roleInDb.Name = request.Name;
+        roleInDb.Description = request.Description;
+        roleInDb.NormalizedName = request.Name.ToUpperInvariant();
+
+        var result = await _roleManager.UpdateAsync(roleInDb);
+        if (!result.Succeeded)
+        {
+            throw new IdentityException(IdentityHelper.GetIdentityResultErrorDescriptions(result));
+        }
+
+        return roleInDb.Name;
     }
 
     public async Task<string> DeleteAsync(string id)
@@ -72,7 +97,7 @@ public class RoleService:IRoleService
         var result = await _roleManager.DeleteAsync(existingRole);
         if (!result.Succeeded)
         {
-            throw new IdentityException(GetIdentityResultErrorDescriptions(result));
+            throw new IdentityException(IdentityHelper.GetIdentityResultErrorDescriptions(result));
         }
 
         return existingRole.Name;
@@ -80,7 +105,43 @@ public class RoleService:IRoleService
 
     public async Task<string> UpdatePermissionsAsync(UpdateRolePermissionRequest request)
     {
-        return await _roleServiceImplementation.UpdatePermissionsAsync(request);
+        var role = await _roleManager.FindByIdAsync(request.RoleId)
+                   ?? throw new NotFoundException(["Role does not exist"]);
+
+        if (role.Name == RoleConstants.Admin)
+        {
+            throw new ConflictException([$"Not allowed to change permissions for '{role.Name}' role."]);
+        }
+
+        if (_tenantInfoContextAccessor.MultiTenantContext.TenantInfo.Id != TenancyConstants.Root.Id)
+        {
+            request.NewPermissions.RemoveAll(p => p.StartsWith("Permission.Tenants."));
+        }
+
+        var currentClaimns = await _roleManager.GetClaimsAsync(role);
+        foreach (var claim in currentClaimns.Where(c => !request.NewPermissions.Any(p=>p==c.Value)))
+        {
+            var result = await _roleManager.RemoveClaimAsync(role, claim);
+
+            if (!result.Succeeded)
+            {
+                throw new IdentityException(IdentityHelper.GetIdentityResultErrorDescriptions(result));
+            }
+        }
+        foreach (var newPermission in request.NewPermissions.Where(p=>!currentClaimns.Any(c=>c.Value ==p)))
+        {
+            await _context
+                .RoleClaims.AddAsync(new ApplicationRoleClaim
+                {
+                    RoleId = role.Id,
+                    ClaimType = ClaimConstants.Permission,
+                    ClaimValue = newPermission,
+                    Description = "",
+                    Group = ""
+                });
+        }
+        await _context.SaveChangesAsync();
+        return "Permissions Updated Successfully";
     }
 
     public async Task<bool> DoesItExistAsync(string name)
@@ -88,7 +149,7 @@ public class RoleService:IRoleService
         return await _roleManager.RoleExistsAsync(name);
     }
 
-    public async Task<List<RoleResponse>> GeAllAsync(CancellationToken ct)
+    public async Task<List<RoleResponse>> GetAllAsync(CancellationToken ct)
     {
         var existingRoles = await _roleManager.Roles.ToListAsync(ct);
         return existingRoles.Adapt<List<RoleResponse>>();
@@ -103,18 +164,14 @@ public class RoleService:IRoleService
 
     public async Task<RoleResponse> GetRoleWthPermissionsAsync(string id, CancellationToken ct)
     {
-        return await _roleServiceImplementation.GetRoleWthPermissionsAsync(id, ct);
+        // return await _roleServiceImplementation.GetRoleWthPermissionsAsync(id, ct);
+        var role = await GetByIdAsync(id, ct);
+        role.Permissions = await _context.RoleClaims.Where(rc => rc.RoleId == id && rc.ClaimType ==
+                ClaimConstants.Permission)
+            .Select(rc => rc.ClaimValue)
+            .ToListAsync(ct);
+        return role;
     }
 
-    private List<string> GetIdentityResultErrorDescriptions(IdentityResult identityResult)
-    {
-        // return identityResult.Errors.Select(errror => errror.Description).ToList();
-        var errorDescriptions = new List<string>();
-
-        foreach (var error in identityResult.Errors)
-        {
-            errorDescriptions.Add(error.Description);
-        }
-        return errorDescriptions;
-    }
+    
 }
