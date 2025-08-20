@@ -10,7 +10,7 @@ using NSwag.Annotations;
 namespace WebApi.Controllers;
 
 [Microsoft.AspNetCore.Components.Route("api/[controller]")]
-public class TokenController:BaseApiController
+public class AuthController:BaseApiController
 {
     [HttpPost("Login")]
     [AllowAnonymous]

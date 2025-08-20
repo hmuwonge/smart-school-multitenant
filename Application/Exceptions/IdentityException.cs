@@ -7,8 +7,8 @@ public class IdentityException:Exception
     public List<string> ErrorMessages { get; set; }
     public HttpStatusCode StatusCode { get; set; }
 
-    public IdentityException(HttpStatusCode statusCode = HttpStatusCode.InternalServerError,
-        List<string> errorMessage = default)
+    public IdentityException( List<string> errorMessage = default, HttpStatusCode statusCode = HttpStatusCode.InternalServerError
+       )
     {
         StatusCode = statusCode;
         ErrorMessages = errorMessage;

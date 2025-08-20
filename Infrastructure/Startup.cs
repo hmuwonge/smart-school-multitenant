@@ -5,14 +5,18 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using Application;
+using Application.Features.Identity.Roles.Contracts;
 using Application.Features.Identity.Tokens;
+using Application.Features.Identity.Users.Contracts;
 using Application.Features.Schools;
 using Application.Features.Tenancy;
 using Application.Wrappers;
 using Finbuckle.MultiTenant;
 using Infrastructure.Constants;
 using Infrastructure.Contexts;
+using Infrastructure.Identity;
 using Infrastructure.Identity.Auth;
+using Infrastructure.Identity.Middleware;
 using Infrastructure.Identity.Models;
 using Infrastructure.Identity.Tokens;
 using Infrastructure.OpenApi;
@@ -37,7 +41,7 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            // Add your infrastructure services here
+            // Add your infrastructure services here,
             // For example, database context, repositories, etc.
             // Example:
             return services
@@ -77,7 +81,11 @@ namespace Infrastructure
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders().Services
-            .AddScoped<ITokenService, TokenService>();
+            .AddScoped<ITokenService, TokenService>()
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<ICurrentUserService, CurrentUserService>()
+            .AddScoped<IRoleService, RoleService>()
+            .AddScoped<CurrentUserMiddleware>();
         }
 
         private static IServiceCollection AddPermissions(this IServiceCollection services)
@@ -145,7 +153,7 @@ namespace Infrastructure
                         },
                         OnChallenge = context =>
                         {
-                            // Skip default logic and handle the response manually
+                            // Skip the default logic and handle the response manually
                             context.HandleResponse();
                             if (context.Response.HasStarted) return Task.CompletedTask;
                             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -224,10 +232,11 @@ namespace Infrastructure
         }
         public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
         {
-            // Configure your middleware here
+            // Configure your middleware here,
             // For example, authentication, logging, etc.
             // Example:
             app.UseAuthentication()
+                .UseMiddleware<CurrentUserMiddleware>()
                 .UseMultiTenant()
                 .UseAuthorization()
                 .UseOpenApiDocumentation();
