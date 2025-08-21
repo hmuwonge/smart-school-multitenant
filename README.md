@@ -21,11 +21,10 @@ This project is a **Multi-Tenant School Management RESTful API** built using **A
 
 ```bash
 src/
-├── School.Core                 # Entry point (controllers, middlewares, DI, config)
-├── School.Infrastructure      # Application layer (DTOs, CQRS, interfaces)
-├── School.WebApi            # Domain layer (Entities, Aggregates, Value Objects, Interfaces)
-├── School.Infrastructure     # Infrastructure layer (EF Core, Repositories, external services)
-├── School.Persistence        # EF Core DbContext, migrations, seeders
+├── School.Application          # Application layer (DTOs, CQRS, interfaces) 
+├── School.Domain              # Domain layer (Entities, Aggregates, Value Objects, Interfaces)
+├── School.Infrastructure      # Infrastructure layer (EF Core,migrations, Repositories, external services)
+├── School.WebApi              # EF Core DbContext, controllers, middlewares, DI, config 
 └── School.Tests              # Unit & Integration Tests
 ```
 
@@ -117,7 +116,7 @@ Contributions are welcome!
 ### 🔧 Prerequisites
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download)
-- SQL Server or PostgreSQL (configurable)
+- SQL Server  (configurable)
 - Visual Studio / VS Code
 - (Optional) Docker for containerization
 
@@ -125,8 +124,8 @@ Contributions are welcome!
 
 ```bash
 # Clone the repository
-git clone https://github.com/hmuwonge/school-api.git
-cd school-api
+git clone https://github.com/hmuwonge/smart-school-multitenant.git
+cd smart-school-multitenant
 
 # Restore dependencies
 dotnet restore
@@ -135,10 +134,10 @@ dotnet restore
 dotnet ef database update --project School.Persistence
 
 # Run the API
-dotnet run --project School.API
+dotnet run --project WebApi
 
 
 # Run unit tests
-dotnet test School.Tests
+#dotnet test School.Tests
 
 ```
